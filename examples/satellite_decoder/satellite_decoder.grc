@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Daniel Estevez
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -8,7 +9,7 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: no_gui
+    generate_options: qt_gui
     hier_block_src_path: '.:'
     id: satellite_decoder
     max_nouts: '0'
@@ -22,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Satellite decoder block example
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -44,6 +44,25 @@ blocks:
     coordinate: [232, 11]
     rotation: 0
     state: enabled
+- name: audio_source_0
+  id: audio_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: hw:1,0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    ok_to_block: 'True'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 172.0]
+    rotation: 0
+    state: true
 - name: blocks_message_debug_0
   id: blocks_message_debug
   parameters:
@@ -54,40 +73,55 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [687, 180]
+    coordinate: [856, 184.0]
     rotation: 0
-    state: true
-- name: blocks_wavfile_source_0
-  id: blocks_wavfile_source
+    state: enabled
+- name: display_text_msg_0
+  id: display_text_msg
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    file: ../../satellite-recordings/aausat_4.wav
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    nchan: '1'
-    repeat: 'False'
+    gui_hint: ''
+    label: ' "QO-100"'
+    messagekey: text
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [81, 232]
+    coordinate: [824, 316.0]
     rotation: 0
     state: true
+- name: satellites_check_ao40_uncoded_crc_0
+  id: satellites_check_ao40_uncoded_crc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    verbose: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 168.0]
+    rotation: 0
+    state: enabled
 - name: satellites_satellite_decoder_0
   id: satellites_satellite_decoder
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    definition: name
-    file: AAUSAT-4
+    definition: file
+    file: /home/schroer/gnuradiocomponents/gr-satellites/python/satyaml/QO-100.yml
     iq: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
-    name: AAUSAT-4
+    name: AO-40
     norad: ''
+    options: '""'
     samp_rate: samp_rate
   states:
     bus_sink: false
@@ -98,8 +132,10 @@ blocks:
     state: true
 
 connections:
-- [blocks_wavfile_source_0, '0', satellites_satellite_decoder_0, '0']
-- [satellites_satellite_decoder_0, out, blocks_message_debug_0, print_pdu]
+- [audio_source_0, '0', satellites_satellite_decoder_0, '0']
+- [satellites_check_ao40_uncoded_crc_0, fail, blocks_message_debug_0, print]
+- [satellites_check_ao40_uncoded_crc_0, ok, display_text_msg_0, text]
+- [satellites_satellite_decoder_0, out, satellites_check_ao40_uncoded_crc_0, in]
 
 metadata:
   file_format: 1

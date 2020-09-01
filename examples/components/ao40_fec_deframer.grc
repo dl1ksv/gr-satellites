@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Daniel Estevez
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -22,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: AO-40 FEC deframer component example
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -44,6 +44,25 @@ blocks:
     coordinate: [208, 12]
     rotation: 0
     state: enabled
+- name: audio_source_0
+  id: audio_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: hw:1,0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    ok_to_block: 'True'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 268.0]
+    rotation: 0
+    state: true
 - name: blocks_message_debug_0
   id: blocks_message_debug
   parameters:
@@ -57,24 +76,6 @@ blocks:
     coordinate: [790, 165]
     rotation: 0
     state: enabled
-- name: blocks_wavfile_source_0
-  id: blocks_wavfile_source
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    file: ../../satellite-recordings/ao73.wav
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    nchan: '1'
-    repeat: 'False'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [53, 217]
-    rotation: 0
-    state: enabled
 - name: satellites_ao40_fec_deframer_0
   id: satellites_ao40_fec_deframer
   parameters:
@@ -83,6 +84,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
+    options: '""'
     short_frames: 'False'
     threshold: '8'
   states:
@@ -97,7 +99,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    baudrate: '1200'
+    baudrate: '400'
     comment: ''
     differential: 'True'
     f_offset: '1500'
@@ -105,6 +107,7 @@ blocks:
     manchester: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
+    options: '""'
     samp_rate: samp_rate
   states:
     bus_sink: false
@@ -115,7 +118,7 @@ blocks:
     state: true
 
 connections:
-- [blocks_wavfile_source_0, '0', satellites_bpsk_demodulator_0, '0']
+- [audio_source_0, '0', satellites_bpsk_demodulator_0, '0']
 - [satellites_ao40_fec_deframer_0, out, blocks_message_debug_0, print_pdu]
 - [satellites_bpsk_demodulator_0, '0', satellites_ao40_fec_deframer_0, '0']
 
