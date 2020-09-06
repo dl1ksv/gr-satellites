@@ -8,7 +8,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-from gnuradio import gr, zeromq
+#from gnuradio import gr, zeromq
+from gnuradio import gr
 from ..components import demodulators
 from ..components import deframers
 from ..components import datasinks
