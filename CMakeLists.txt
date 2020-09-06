@@ -143,7 +143,22 @@ if(DOXYGEN_FOUND)
 else(DOXYGEN_FOUND)
     option(ENABLE_DOXYGEN "Build docs using Doxygen" OFF)
 endif(DOXYGEN_FOUND)
+########################################################################
+# PyBind11 Related
+########################################################################
 
+find_package(pybind11 REQUIRED)
+execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c
+    "try:\n import numpy\n import os\n inc_path = numpy.get_include()\n if os.path.exists(os.path.join(inc_path, 'numpy', 'arrayobject.h')):\n  print(inc_path, end='')\nexcept:\n pass"
+    OUTPUT_VARIABLE PYTHON_NUMPY_INCLUDE_DIR)
+
+include(GrComponent)
+GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
+    PYTHONLIBS_FOUND
+    pybind11_FOUND
+)
+add_definitions(-DENABLE_PYTHON)
 ########################################################################
 # Create uninstall target
 ########################################################################
@@ -164,7 +179,6 @@ add_subdirectory(include/satellites)
 add_subdirectory(lib)
 add_subdirectory(apps)
 add_subdirectory(docs)
-add_subdirectory(swig)
 add_subdirectory(python)
 add_subdirectory(grc)
 

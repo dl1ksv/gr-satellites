@@ -84,7 +84,8 @@ blocks:
     comment: ''
     gui_hint: ''
     label: ' "QO-100"'
-    messagekey: text
+    messagekey: ''''''
+    splitlength: '64'
   states:
     bus_sink: false
     bus_source: false
@@ -133,8 +134,8 @@ blocks:
 
 connections:
 - [audio_source_0, '0', satellites_satellite_decoder_0, '0']
-- [satellites_check_ao40_uncoded_crc_0, fail, blocks_message_debug_0, print]
 - [satellites_check_ao40_uncoded_crc_0, ok, display_text_msg_0, text]
+- [satellites_satellite_decoder_0, out, blocks_message_debug_0, print_pdu]
 - [satellites_satellite_decoder_0, out, satellites_check_ao40_uncoded_crc_0, in]
 
 metadata:
